@@ -3,26 +3,32 @@ import { useSelector, useDispatch } from "react-redux"
 import axios from "axios"
 
 // action definitions
-const GET_USERS = "users/GET_USERS"
-const ADD_GOING = "going/ADD_GOING"
-const GET_GOING = "going/GET_GOING"
+const GET_USER = "user/GET_USER"
+const ADD_USER = "user/ADD_USER"
+const REMOVE_USER = "user/REMOVE_USER"
 
 // initial state
 const initialState = {
-  users: [],
+  user: [],
   going: [],
-  notGoing: []
+  notgoing: []
 }
 
 // reducer
 export default (state = initialState, action) => {
   switch (action.type) {
-    case GET_USERS:
-      return { ...state, users: action.payload }
-    case ADD_GOING:
-      return { ...state, going: [...state.going, action.payload] }
-    case GET_GOING:
-      return { ...state, notGoing: action.payload }
+    case GET_USER:
+      return { ...state, user: action.payload }
+    case ADD_USER:
+      return {
+        ...state,
+        going: [...state.going, action.payload]
+      }
+    case REMOVE_USER:
+      return {
+        ...state,
+        notgoing: [...state.notgoing, action.payload]
+      }
     default:
       return state
   }
@@ -31,55 +37,47 @@ export default (state = initialState, action) => {
 // action creators
 const getUsers = () => {
   return dispatch => {
-    axios.get("https://randomuser.me/api/?results=1").then(resp => {
+    axios.get("/users").then(resp => {
       dispatch({
-        type: GET_USERS,
+        type: GET_USER,
         payload: resp.data.results
       })
     })
   }
 }
 
-const getGoing = () => {
-  return action => {
-    axios.get("/going").then(response => {
-      action({
-        type: GET_GOING,
-        payload: response.data
-      })
+const addUser = payload => {
+  return dispatch => {
+    dispatch({
+      type: ADD_USER,
+      payload
     })
   }
 }
 
-const addToGoing = payload => {
-  return action => {
-    axios
-      .post("/going", {
-        name: `${payload.name.first} ${payload.name.last}`,
-        email: payload.email,
-        phone: payload.phone,
-        picture: payload.picture.large
-      })
-      .then(response => {
-        action({
-          type: ADD_GOING,
-          payload
-        })
-      })
-  }
-}
+const removeUser = payload => (
+  {
+  type: REMOVE_USER,
+  payload
+})
 
 // custom hooks
 export function useUsers() {
-  const users = useSelector(appState => appState.userState.users)
+  const user = useSelector(appState => appState.userState.user)
   const going = useSelector(appState => appState.userState.going)
+  const notgoing = useSelector(appState => appState.userState.notgoing)
   const dispatch = useDispatch()
-  const addGoing = payload => dispatch(addToGoing(payload))
+  const addAttendie = payload =>
+    dispatch(addUser(payload), dispatch(getUsers()))
+  const removeAttendie = payload =>
+    dispatch(removeUser(payload), dispatch(getUsers()))
+
+  window.localStorage.setItem("user", JSON.stringify(user))
+  window.localStorage.setItem('going', JSON.stringify(going))
 
   useEffect(() => {
     dispatch(getUsers())
-    dispatch(getGoing())
   }, [dispatch])
 
-  return { users, going, addGoing }
+  return { user, going, addAttendie, removeAttendie, notgoing }
 }

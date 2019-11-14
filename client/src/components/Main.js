@@ -1,18 +1,25 @@
 import React from "react"
 import { useUsers } from "../hooks"
+import '../styles/Main.css'
+import Icon from "../lib/Icon"
 
 const Main = props => {
-  const { users, going, addGoing } = useUsers()
-  console.log("going ====>", going)
+  const { user, going, addAttendie, removeAttendie, notgoing } = useUsers()
+  console.log("==> going", going)
+  console.log('not going ----<<<<', notgoing)
   return (
-    <div>
-      {users.map((user, i) => (
+    <div className="main-container">
+      <ul className="attendie-count">
+        <li className="going">Going: {going.length}</li>
+        <li className="notgoing">Not Going: {notgoing.length}</li>
+      </ul>
+      {user.map((user, i) => (
         <div key={`User-${i}`}>
           <img
             src={user.picture.large}
             alt={user.name.first + " " + user.name.last}
           />
-          <ul>
+          <ul className="user-details">
             <li>
               {user.name.first}&nbsp;{user.name.last}
             </li>
@@ -20,8 +27,8 @@ const Main = props => {
             <li>{user.email}</li>
           </ul>
           <div className="buttons">
-            <button>-</button>
-            <button onClick={event => addGoing(user)}>+</button>
+            <button className="close" onClick={event => removeAttendie(user)}><Icon icon="times" /></button>
+            <button className="checkmark" onClick={event => addAttendie(user)}><Icon icon="check" /></button>
           </div>
         </div>
       ))}
