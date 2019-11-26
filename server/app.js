@@ -2,6 +2,7 @@ const createError = require("http-errors")
 const express = require("express")
 const routes = require("./routes")
 const goingRouter = require("./routes/going")
+const notGoingRouter = require("./routes/notgoing")
 const app = express()
 
 app.use(express.json())
@@ -9,6 +10,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use("/", routes)
 app.use("/", goingRouter)
+app.use("/", notGoingRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

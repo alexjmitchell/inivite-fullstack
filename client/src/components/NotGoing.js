@@ -4,18 +4,16 @@ import "../styles/SidePages.css"
 import { Link } from "react-router-dom"
 import { useUsers } from "../hooks"
 
-const Go = props => {
-  const { going } = useUsers()
+const NoGo = props => {
+  const { notgoing } = useUsers()
   return (
     <>
       <div className="header-container">
-        <Link to="/" className="home-button">
-          &larr;
-        </Link>
-        <h1 className="Main-Title">Going</h1>
+        <Link to="/" className="home-button">&larr;</Link>
+        <h1 className="Main-Title">Not Going</h1>
       </div>
       <div className="invite-list">
-        {going.map((person, i) => (
+        {notgoing.map((person, i) => (
           <Card
             source={person.user.picture.large}
             name={`${person.user.name.first} ${person.user.name.last}`}
@@ -28,4 +26,4 @@ const Go = props => {
   )
 }
 
-export default Go
+export default NoGo

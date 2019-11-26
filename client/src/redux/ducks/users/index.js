@@ -57,10 +57,16 @@ const addUser = user => {
   }
 }
 
-const removeUser = payload => ({
-  type: REMOVE_USER,
-  payload
-})
+const removeUser = user => {
+  return dispatch => {
+    axios.post("/notgoing", { user }).then(response => {
+      dispatch({
+        type: REMOVE_USER,
+        payload: response.data
+      })
+    })
+  }
+}
 
 // custom hooks
 export function useUsers() {
@@ -70,8 +76,8 @@ export function useUsers() {
   const notgoing = useSelector(appState => appState.userState.notgoing)
   const dispatch = useDispatch()
   const addAttendie = user => dispatch(addUser(user), dispatch(getUsers()))
-  const removeAttendie = payload =>
-    dispatch(removeUser(payload), dispatch(getUsers()))
+  const removeAttendie = user =>
+    dispatch(removeUser(user), dispatch(getUsers()))
 
   useEffect(() => {
     dispatch(getUsers())
