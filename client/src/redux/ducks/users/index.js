@@ -46,17 +46,18 @@ const getUsers = () => {
   }
 }
 
-const addUser = payload => {
+const addUser = user => {
   return dispatch => {
-    dispatch({
-      type: ADD_USER,
-      payload
+    axios.post("/going", { user }).then(response => {
+      dispatch({
+        type: ADD_USER,
+        payload: response.data
+      })
     })
   }
 }
 
-const removeUser = payload => (
-  {
+const removeUser = payload => ({
   type: REMOVE_USER,
   payload
 })
@@ -65,19 +66,22 @@ const removeUser = payload => (
 export function useUsers() {
   const user = useSelector(appState => appState.userState.user)
   const going = useSelector(appState => appState.userState.going)
+
   const notgoing = useSelector(appState => appState.userState.notgoing)
   const dispatch = useDispatch()
-  const addAttendie = payload =>
-    dispatch(addUser(payload), dispatch(getUsers()))
+  const addAttendie = user => dispatch(addUser(user), dispatch(getUsers()))
   const removeAttendie = payload =>
     dispatch(removeUser(payload), dispatch(getUsers()))
-
-  window.localStorage.setItem("user", JSON.stringify(user))
-  window.localStorage.setItem('going', JSON.stringify(going))
 
   useEffect(() => {
     dispatch(getUsers())
   }, [dispatch])
 
-  return { user, going, addAttendie, removeAttendie, notgoing }
+  return {
+    user,
+    going,
+    addAttendie,
+    removeAttendie,
+    notgoing
+  }
 }

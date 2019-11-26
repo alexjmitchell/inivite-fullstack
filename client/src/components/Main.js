@@ -2,13 +2,14 @@ import React from "react"
 import { useUsers } from "../hooks"
 import '../styles/Main.css'
 import Icon from "../lib/Icon"
+import { Link } from 'react-router-dom'
 
 const Main = props => {
   const { user, going, addAttendie, removeAttendie, notgoing } = useUsers()
   console.log("==> going", going)
-  console.log('not going ----<<<<', notgoing)
   return (
     <div className="main-container">
+      <Link to="/going" >Going</Link>
       <ul className="attendie-count">
         <li className="going">Going: {going.length}</li>
         <li className="notgoing">Not Going: {notgoing.length}</li>

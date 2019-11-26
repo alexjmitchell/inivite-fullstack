@@ -1,6 +1,6 @@
 import React from "react"
 import Main from "./Main"
-import Going from './Going'
+import Going from "./Going"
 import { BrowserRouter as Router, Route } from "react-router-dom"
 
 const App = props => {
